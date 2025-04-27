@@ -68,7 +68,7 @@ public class ProductService implements IProductService {
         return ResponseEntity.ok(responseList);
     }
 
-    // 🌟 New method for admin brand add
+    //adding brand from coupon
     public ResponseEntity<String> addBrandFromCoupon(ProductRequestDTO dto) {
         Product product = new Product();
         product.setName(dto.getName());

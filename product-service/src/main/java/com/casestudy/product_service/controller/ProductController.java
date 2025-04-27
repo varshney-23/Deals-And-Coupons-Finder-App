@@ -4,6 +4,7 @@ import com.casestudy.product_service.dto.ProductRequestDTO;
 import com.casestudy.product_service.dto.ProductResponseDTO;
 import com.casestudy.product_service.models.Product;
 import com.casestudy.product_service.service.ProductService;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,9 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
+    //user apis->
     @GetMapping("/")
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         return productService.getAllProducts();
@@ -47,6 +49,8 @@ public class ProductController {
         return productService.deleteProductById(id);
     }
 
+    //Hidden API: Feign call from Coupon-Service, so that it is not visible at swagger
+    @Hidden
     @PostMapping("/admin/add")
     public ResponseEntity<String> addBrandFromCoupon(@RequestBody ProductRequestDTO dto) {
         return productService.addBrandFromCoupon(dto);
