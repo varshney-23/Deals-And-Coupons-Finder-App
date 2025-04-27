@@ -1,6 +1,7 @@
 package com.casestudy.product_service.controller;
 
-import com.casestudy.product_service.dto.ResponseDTO;
+import com.casestudy.product_service.dto.ProductRequestDTO;
+import com.casestudy.product_service.dto.ProductResponseDTO;
 import com.casestudy.product_service.models.Product;
 import com.casestudy.product_service.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,32 +18,37 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/")
-    public ResponseEntity<List<ResponseDTO>> getAllProducts() {
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<ResponseDTO> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
     @GetMapping("/find/category/{category}")
-    public ResponseEntity<List<ResponseDTO>> searchProductsByCategory(@PathVariable String category) {
+    public ResponseEntity<List<ProductResponseDTO>> searchProductsByCategory(@PathVariable String category) {
         return productService.findByCategory(category);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ResponseDTO> addProduct(@RequestBody Product product) {
+    public ResponseEntity<ProductResponseDTO> addProduct(@RequestBody Product product) {
         return productService.addProduct(product);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ResponseDTO> updateProduct(@RequestBody Product product) {
+    public ResponseEntity<ProductResponseDTO> updateProduct(@RequestBody Product product) {
         return productService.updateProduct(product);
     }
 
     @DeleteMapping("/del/{id}")
     public ResponseEntity<String> deleteProductById(@PathVariable Long id) {
         return productService.deleteProductById(id);
+    }
+
+    @PostMapping("/admin/add")
+    public ResponseEntity<String> addBrandFromCoupon(@RequestBody ProductRequestDTO dto) {
+        return productService.addBrandFromCoupon(dto);
     }
 }

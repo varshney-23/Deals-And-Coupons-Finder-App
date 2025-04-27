@@ -1,16 +1,18 @@
 package com.casestudy.product_service.Interface;
 
+import com.casestudy.product_service.dto.ProductResponseDTO;
 import com.casestudy.product_service.models.Product;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IProductService {
-    List<Product> getAllProducts();
-    Product addProduct(Product product);
-    Object getProductById(String id);
-    Product updateProduct(Product product);
-    void deleteProductById(String id);
-    List<Optional<Product>> findByCategory(String category);
+
+    ResponseEntity<List<ProductResponseDTO>> getAllProducts();
+    ResponseEntity<ProductResponseDTO> addProduct(Product product);
+    ResponseEntity<ProductResponseDTO> getProductById(Long id);
+    ResponseEntity<ProductResponseDTO> updateProduct(Product product);
+    ResponseEntity<String> deleteProductById(Long id);
+    ResponseEntity<List<ProductResponseDTO>> findByCategory(String category);
 
 }

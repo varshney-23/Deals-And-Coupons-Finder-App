@@ -15,15 +15,14 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private double price;
-    private double rating;
-    private String imageUrl;
-    private String category;
+    private String name; //brand
+    private double rating; // maybe company's rating?
+    private String imageUrl; // logo
+    private String category; // like edu, fashion, accessories, electronics
 
     @Override
     public String toString() {
-        return "Products [id=" + id + ", name=" + name + ", price=" + price + ", rating=" + rating + ", imageUrl="
+        return "Products [id=" + id + ", name=" + name + ", rating=" + rating + ", imageUrl="
                 + imageUrl + ", category=" + category + "]";
     }
 }

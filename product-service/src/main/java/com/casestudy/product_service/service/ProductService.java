@@ -1,6 +1,8 @@
 package com.casestudy.product_service.service;
 
-import com.casestudy.product_service.dto.ResponseDTO;
+import com.casestudy.product_service.Interface.IProductService;
+import com.casestudy.product_service.dto.ProductRequestDTO;
+import com.casestudy.product_service.dto.ProductResponseDTO;
 import com.casestudy.product_service.exception.UserException;
 import com.casestudy.product_service.models.Product;
 import com.casestudy.product_service.repository.ProductRepository;
@@ -13,31 +15,31 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductService {
+public class ProductService implements IProductService {
 
     @Autowired
     ProductRepository productRepository;
 
-    public ResponseEntity<List<ResponseDTO>> getAllProducts() {
-        List<ResponseDTO> products = productRepository.findAll()
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+        List<ProductResponseDTO> products = productRepository.findAll()
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(products);
     }
 
-    public ResponseEntity<ResponseDTO> addProduct(Product product) {
+    public ResponseEntity<ProductResponseDTO> addProduct(Product product) {
         Product saved = productRepository.save(product);
         return ResponseEntity.ok(convertToDTO(saved));
     }
 
-    public ResponseEntity<ResponseDTO> getProductById(Long id) {
+    public ResponseEntity<ProductResponseDTO> getProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new UserException("Product with ID " + id + " not found"));
         return ResponseEntity.ok(convertToDTO(product));
     }
 
-    public ResponseEntity<ResponseDTO> updateProduct(Product product) {
+    public ResponseEntity<ProductResponseDTO> updateProduct(Product product) {
         if (!productRepository.existsById(product.getId())) {
             throw new UserException("Cannot update, product not found with ID: " + product.getId());
         }
@@ -53,25 +55,35 @@ public class ProductService {
         return ResponseEntity.ok("Product deleted successfully!");
     }
 
-    public ResponseEntity<List<ResponseDTO>> findByCategory(String category) {
+    public ResponseEntity<List<ProductResponseDTO>> findByCategory(String category) {
         List<Product> products = productRepository.findByCategory(category).stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
 
-        List<ResponseDTO> responseList = products.stream()
+        List<ProductResponseDTO> responseList = products.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(responseList);
     }
 
-    private ResponseDTO convertToDTO(Product product) {
-        return new ResponseDTO(
+    // 🌟 New method for admin brand add
+    public ResponseEntity<String> addBrandFromCoupon(ProductRequestDTO dto) {
+        Product product = new Product();
+        product.setName(dto.getName());
+        product.setImageUrl(dto.getLogoUrl());
+        product.setCategory(dto.getCategory());
+        product.setRating(5.0); // Default rating
+        productRepository.save(product);
+        return ResponseEntity.ok("Brand added successfully in Product-Service!");
+    }
+
+    private ProductResponseDTO convertToDTO(Product product) {
+        return new ProductResponseDTO(
                 product.getId(),
                 product.getName(),
-                product.getCategory(),
-                product.getPrice()
+                product.getCategory()
         );
     }
 }
