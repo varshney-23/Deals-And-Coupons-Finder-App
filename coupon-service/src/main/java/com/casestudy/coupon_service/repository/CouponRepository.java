@@ -11,5 +11,5 @@ import java.util.List;
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
     List<Coupon> findByBrand(String brand);
     List<Coupon> findByCategory(String category);
-
+    List<Coupon> findByCoupType(String coupType);
 }

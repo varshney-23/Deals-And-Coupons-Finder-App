@@ -74,6 +74,12 @@ public class CouponService implements ICouponService {
         return convertToDTO(coupon);
     }
 
+    public List<CouponResponseDTO> getCouponsByType(String coupType) {
+        return couponRepository.findByCoupType(coupType).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     private CouponResponseDTO convertToDTO(Coupon coupon) {
         return new CouponResponseDTO(
                 coupon.getCouponId(),
