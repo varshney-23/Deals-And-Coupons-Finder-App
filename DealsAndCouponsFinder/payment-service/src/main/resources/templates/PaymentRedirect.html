@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<h2>Secure Payment</h2>
+<form id="payment-form">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br>
+
+    <button type="button" onclick="makePayment()">Proceed To Pay</button>
+</form>
+
+<script>
+    function makePayment() {
+        const username = document.getElementById('username').value;
+
+        fetch(`http://localhost:8085/payments/create/${username}`, {
+            method: 'POST',
+        })
+        .then(response => response.json())
+        .then(data => {
+            const options = {
+                key: "rzp_test_NGx29hfviuqnf8", // Replace with your Razorpay API Key
+                amount: data.amount * 100, // Convert to paise
+                currency: "INR",
+                name: "Aashi Mittal",
+                description: "Payment for Coupons",
+                order_id: data.orderId, // Backend-generated order ID
+                handler: function (response) {
+                    console.log("razorpayID",response)
+                    // Call backend to update payment status immediately after success
+                    fetch(`http://localhost:8085/payments/confirmPayment/${response.razorpay_order_id}/${username}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        }
+                    })
+                    .then(response => response.text())
+<!--                    .then(data => {-->
+<!--                        alert("Payment Confirmation: " + data);-->
+<!--                        window.location.href = 'http://localhost:63342/payment-service/templates/success.html';-->
+<!--                    })-->
+                    .catch(error => console.error("Error:", error));
+                },
+                prefill: {
+                    name: username
+                },
+                theme: {
+                    color: "#3399cc"
+                }
+            };
+            const rzp = new Razorpay(options);
+            rzp.open();
+        })
+        .catch(error => console.error("Error:", error));
+    }
+</script>
+
+</body>
+</html>

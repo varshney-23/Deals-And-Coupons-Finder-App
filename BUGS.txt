@@ -1,0 +1,8 @@
+BUGS->
+
+1. One User only one coupon.
+2. if payment is failing, still showing success statement.
+3. different users same role but token is working for every same role's token.
+4. create token at time of register as well, so don't have to login and get the token.
+5. when a user purchase the coupon, the quantity for that particular coupon is not reducing.
+6. 
