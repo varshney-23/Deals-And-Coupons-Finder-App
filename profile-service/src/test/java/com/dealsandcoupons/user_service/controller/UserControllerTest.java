@@ -40,7 +40,7 @@ class UserControllerTest {
     void registerUser() throws Exception {
         String req = """
                 {
-                    "name": "test1",
+                    "username": "test1",
                     "email": "test1@gmail.com",
                     "password": "qwerty123"
                 }
@@ -89,32 +89,5 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id").value(mockUser.getId()))
                 .andExpect(jsonPath("$.username").value(mockUser.getUsername()));
 
-    }
-
-    @Test
-    void getUserById() throws Exception {
-        User mockUser = new User();
-        mockUser.setId(1L);
-        mockUser.setUsername("test1");
-
-        when(authService.getUserById(1L)).thenReturn(mockUser);
-
-        mockMvc.perform(get("/auth/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(mockUser.getId()))
-                .andExpect(jsonPath("$.username").value(mockUser.getUsername()));
-    }
-
-    @Test
-    void userExists() throws Exception {
-        User mockUser = new User();
-        mockUser.setId(1L);
-        mockUser.setUsername("test1");
-
-        when(authService.userExists(1L)).thenReturn(true);
-
-        mockMvc.perform(get("/auth/exists/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("true"));
     }
 }

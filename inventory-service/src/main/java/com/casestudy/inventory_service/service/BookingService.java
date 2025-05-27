@@ -78,7 +78,7 @@ public class BookingService implements IBookingService {
         booking.setUserId(userId);
         booking.setCoupon(coupon);
         booking.setCouponCode(generateCode2());
-        booking.setQuantity(0);
+        booking.setQuantity(1);
         booking.setPrice(0);
         booking.setPaid(false);
         booking.setEmail(user.getEmail());
@@ -138,6 +138,7 @@ public class BookingService implements IBookingService {
         //decreasing the no. of coupons for that particular coupon!
         if(coupon.getQuantity() > 0 && coupon.getQuantity() >= dto.getQuantity()) {
             coupon.setQuantity(coupon.getQuantity() - dto.getQuantity());
+            couponRepository.save(coupon);
         }
 
         BookingResponseDTO newDTO = convertToDTO(saved);
@@ -154,7 +155,7 @@ public class BookingService implements IBookingService {
     @Override
     @CircuitBreaker(name = "paymentClientCB", fallbackMethod = "fallbackForCompletePayment")
     public ResponseEntity<String> completePayment(Long bookingId) {
-        System.out.println("payment fxn ke inside!!");
+//        System.out.println("payment fxn ke inside!!");
         //if booking even exists
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new UserException("Booking not found"));
@@ -162,7 +163,7 @@ public class BookingService implements IBookingService {
         //if booking is already done, like we won't be having to check this one to payment-service.
         if (booking.isPaid()) return ResponseEntity.ok("Already paid");
 
-        System.out.println("check krne ke baad");
+//        System.out.println("check krne ke baad");
 
         PayRequestDTO payRequestDTO = new PayRequestDTO();
         payRequestDTO.setAmount(booking.getPrice());
@@ -171,24 +172,21 @@ public class BookingService implements IBookingService {
         payRequestDTO.setReceipt("txn_"+bookingId);
 
         try{
-            System.out.println("payclient ko call krne se pehle");
+//            System.out.println("payclient ko call krne se pehle");
             String response = paymentClient.processPayment(payRequestDTO);
-            System.out.println("payclient ko call krne ke baad");
-            if(response.contains("Failed")){
-                return ResponseEntity.ok(response);
-            }
+//            System.out.println("payclient ko call krne ke baad");
             booking.setPaid(true);
             bookingRepository.save(booking);
-            System.out.println("Save ogy________________");
+//            System.out.println("Save ogy________________");
             return ResponseEntity.ok("Payment successful and booking updated!\n"+ response);
         } catch(Exception e) {
-            System.out.println("Kya exception catch hua?");
-            throw new UserException("Payment failed");
+//            System.out.println("Kya exception catch hua?");
+            throw new UserException("Payment failed" + e.getMessage());
         }
     }
 
     public ResponseEntity<String> fallbackForCompletePayment(Long bookingId, Throwable t) {
-        System.out.println("service is down, Ma'am, idk why?");
+//        System.out.println("service is down, Ma'am, idk why?");
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body("Payment service is temporarily down. Please try again later.");
     }
@@ -205,12 +203,6 @@ public class BookingService implements IBookingService {
     public ResponseEntity<List<BookingResponseDTO>> getAllBookings() {
         List<Booking> bookings = bookingRepository.findAll();
         return ResponseEntity.ok(bookings.stream().map(this::convertToDTO).collect(Collectors.toList()));
-    }
-
-    @Override
-    public ResponseEntity<Long> getUserIdByBookingId(Long bookingId){
-        Booking book =  bookingRepository.findById(bookingId).orElseThrow(() -> new UserException("Booking not found"));
-        return ResponseEntity.ok(book.getUserId());
     }
 
     private BookingResponseDTO convertToDTO(Booking booking) {

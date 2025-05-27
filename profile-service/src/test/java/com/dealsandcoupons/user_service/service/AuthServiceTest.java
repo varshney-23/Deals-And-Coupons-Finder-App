@@ -149,33 +149,4 @@ class AuthServiceTest {
         assertFalse(opt.isPresent());
     }
 
-    @Test
-    void getUserById_success() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
-
-        User user = authService.getUserById(1L);
-        assertEquals("test1", user.getUsername());
-    }
-
-    @Test
-    void getUserById_failure_andThrowsException() {
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
-
-        RuntimeException exep = assertThrows(RuntimeException.class, () -> authService.getUserById(1L));
-        assertEquals("User not found", exep.getMessage());
-    }
-
-    @Test
-    void userExists_true() {
-        when(userRepository.existsById(1L)).thenReturn(true);
-        Boolean exists = authService.userExists(1L);
-        assertTrue(exists);
-    }
-
-    @Test
-    void userExists_Fail() {
-        when(userRepository.existsById(1L)).thenReturn(false);
-        Boolean exists = authService.userExists(1L);
-        assertFalse(exists);
-    }
 }

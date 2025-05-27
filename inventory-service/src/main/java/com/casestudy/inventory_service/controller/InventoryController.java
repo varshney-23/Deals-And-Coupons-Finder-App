@@ -2,9 +2,7 @@ package com.casestudy.inventory_service.controller;
 
 import com.casestudy.inventory_service.Interface.IBookingService;
 import com.casestudy.inventory_service.Interface.ICouponService;
-import com.casestudy.inventory_service.dto.BookingRequestDTO;
-import com.casestudy.inventory_service.dto.BookingResponseDTO;
-import com.casestudy.inventory_service.dto.CouponResponseDTO;
+import com.casestudy.inventory_service.dto.*;
 import com.casestudy.inventory_service.model.Coupons;
 import com.casestudy.inventory_service.repository.BookingRepository;
 import jakarta.validation.Valid;
@@ -31,15 +29,21 @@ public class InventoryController {
     // -------------------- COUPON APIs --------------------
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/coupon/add")
-    public ResponseEntity<CouponResponseDTO> addCoupon(@Valid @RequestBody Coupons coupon) {
-        return couponService.addCoupon(coupon);
+    @PostMapping("/coupon/add/promotional")
+    public ResponseEntity<CouponResponseDTO> addPromoCoupon(@Valid @RequestBody PromoCouponDTO coupon) {
+        return couponService.addPromoCoupon(coupon);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/coupon/add/paid")
+    public ResponseEntity<CouponResponseDTO> addPaidCoupon(@Valid @RequestBody PaidCouponDTO coupon) {
+        return couponService.addPaidCoupon(coupon);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/coupon/update")
-    public ResponseEntity<CouponResponseDTO> updateCoupon(@Valid @RequestBody Coupons coupon) {
-        return couponService.updateCoupon(coupon);
+    public ResponseEntity<CouponResponseDTO> updateCoupon(@Valid @RequestBody CouponUpdateDTO dto) {
+        return couponService.updateCoupon(dto);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -97,7 +101,7 @@ public class InventoryController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/booking/payment/{bookingId}")
     public ResponseEntity<String> completePayment(@PathVariable Long bookingId) {
-        System.out.println("hit ho bhi raha hai?");
+//        System.out.println("hit ho bhi raha hai?");
         return bookingService.completePayment(bookingId);
     }
 

@@ -1,5 +1,6 @@
 package com.casestudy.payment_service.service;
 
+import com.casestudy.payment_service.exception.PaymentException;
 import com.casestudy.payment_service.model.PayPojo;
 import com.casestudy.payment_service.model.PayRequestDTO;
 import com.casestudy.payment_service.repository.PayRepository;
@@ -41,7 +42,7 @@ public class PayService {
             return "Payment Order Created: " + order.get("id");
 
         } catch (Exception e) {
-            return "Payment Failed: " + e.getMessage();
+            throw new PaymentException("Payment failed: "+e.getMessage());
         }
     }
 }

@@ -3,6 +3,9 @@ package com.casestudy.inventory_service.service;
 import com.casestudy.inventory_service.Interface.ICouponService;
 import com.casestudy.inventory_service.dto.CouponResponseDTO;
 import com.casestudy.inventory_service.Exception.UserException;
+import com.casestudy.inventory_service.dto.CouponUpdateDTO;
+import com.casestudy.inventory_service.dto.PaidCouponDTO;
+import com.casestudy.inventory_service.dto.PromoCouponDTO;
 import com.casestudy.inventory_service.model.Brand;
 import com.casestudy.inventory_service.model.Coupons;
 import com.casestudy.inventory_service.repository.BrandRepository;
@@ -26,6 +29,58 @@ public class CouponService implements ICouponService {
     @Autowired
     private BrandRepository brandRepository;
 
+    public ResponseEntity<CouponResponseDTO> addPromoCoupon(PromoCouponDTO dto) {
+        Brand brand = getOrSavedBrand(dto.getBrandName(), dto.getBrandLogo());
+
+        Optional<Coupons> existingCoupon = couponRepository.findByBrandAndOfferDetailsIgnoreCase(
+                brand, dto.getOfferDetails()
+        );
+
+        if (existingCoupon.isPresent()) {
+            throw new IllegalArgumentException("Coupon with the same brand and offer already exists");
+        }
+
+        Coupons couponNew = new Coupons();
+        couponNew.setBrand(brand);
+        couponNew.setBrandLogo(dto.getBrandLogo());
+        couponNew.setCategory(dto.getCategory());
+        couponNew.setCouponType("promotional");
+        couponNew.setCategory(dto.getCategory());
+        couponNew.setOfferDetails(dto.getOfferDetails());
+        couponNew.setQuantity(1);
+        couponNew.setPrice(0);
+        couponNew.setExpiryTime(dto.getExpiryTime());
+
+        couponRepository.save(couponNew);
+        return ResponseEntity.ok(convertToPromoDTO(couponNew));
+
+    }
+    public ResponseEntity<CouponResponseDTO> addPaidCoupon(PaidCouponDTO dto) {
+        Brand brand = getOrSavedBrand(dto.getBrandName(), dto.getBrandLogo());
+
+        Optional<Coupons> existingCoupon = couponRepository.findByBrandAndOfferDetailsIgnoreCase(
+                brand, dto.getOfferDetails()
+        );
+
+        if (existingCoupon.isPresent()) {
+            throw new IllegalArgumentException("Coupon with the same brand and offer already exists");
+        }
+
+        Coupons couponNew = new Coupons();
+        couponNew.setBrand(brand);
+        couponNew.setBrandLogo(dto.getBrandLogo());
+        couponNew.setCategory(dto.getCategory());
+        couponNew.setCouponType("paid");
+        couponNew.setCategory(dto.getCategory());
+        couponNew.setOfferDetails(dto.getOfferDetails());
+        couponNew.setQuantity(dto.getQuantity());
+        couponNew.setPrice(dto.getPrice());
+        couponNew.setExpiryTime(dto.getExpiryTime());
+
+        Coupons saved = couponRepository.save(couponNew);
+        return ResponseEntity.ok(convertToPaidDTO(saved));
+    }
+
     public void deleteExpiredCoupons() {
         LocalDateTime now = LocalDateTime.now();
         List<Coupons> expired = couponRepository.findByExpiryTimeBefore(now);
@@ -35,34 +90,9 @@ public class CouponService implements ICouponService {
         }
     }
 
-    public ResponseEntity<CouponResponseDTO> addCoupon(Coupons coupon) {
-        Brand brand = coupon.getBrand();
-        // Null check for brand
-        if (brand == null || brand.getBrandName() == null || brand.getBrandName().isEmpty()) {
-            throw new IllegalArgumentException("Brand name is required");
-        }
-
-        // Check if brand already exists
-        Optional<Brand> existingBrand = brandRepository.findByBrandNameIgnoreCase(brand.getBrandName());
-
-        Brand brandToUse = existingBrand.orElseGet(() -> brandRepository.save(brand));
-        coupon.setBrand(brandToUse);
-
-        Optional<Coupons> existingCoupon = couponRepository.findByBrandAndOfferDetailsIgnoreCase(
-                coupon.getBrand(), coupon.getOfferDetails()
-        );
-
-        if (existingCoupon.isPresent()) {
-            throw new IllegalArgumentException("Coupon with the same brand and offer already exists");
-        }
-        Coupons saved = couponRepository.save(coupon);
-        return ResponseEntity.ok(convertToDTO(saved));
-
-    }
-
     public ResponseEntity<List<CouponResponseDTO>> getAllCoupons() {
         List<CouponResponseDTO> list = couponRepository.findAll().stream()
-                .map(this::convertToDTO)
+                .map(this::convertToPaidDTO)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(list);
@@ -71,15 +101,26 @@ public class CouponService implements ICouponService {
     public ResponseEntity<CouponResponseDTO> getCouponById(Long id) {
         Coupons coupon = couponRepository.findById(id)
                 .orElseThrow(() -> new UserException("Coupon not found with ID: " + id));
-        return ResponseEntity.ok(convertToDTO(coupon));
+        return ResponseEntity.ok(convertToPaidDTO(coupon));
     }
 
-    public ResponseEntity<CouponResponseDTO> updateCoupon(Coupons coupon) {
-        if (!couponRepository.existsById(coupon.getCoupon_id())) {
-            throw new UserException("Cannot update. Coupon not found with ID: " + coupon.getCoupon_id());
-        }
+    public ResponseEntity<CouponResponseDTO> updateCoupon(CouponUpdateDTO dto) {
+        Coupons coupon = couponRepository.findById(dto.getCouponId())
+                .orElseThrow(() -> new UserException("Coupon not found"));
+
+        Brand brand = brandRepository.findById(dto.getBrandId())
+                .orElseThrow(() -> new UserException("Brand not found"));
+
+        coupon.setBrand(brand);
+        coupon.setCategory(dto.getCategory());
+        coupon.setOfferDetails(dto.getOfferDetails());
+        coupon.setCouponType(dto.getCouponType());
+        coupon.setQuantity(dto.getQuantity());
+        coupon.setPrice(dto.getPrice());
+        coupon.setExpiryTime(dto.getExpiryTime());
+
         Coupons updated = couponRepository.save(coupon);
-        return ResponseEntity.ok(convertToDTO(updated));
+        return ResponseEntity.ok(convertToPaidDTO(updated));
     }
 
     public ResponseEntity<String> deleteCouponById(Long id) {
@@ -105,7 +146,7 @@ public class CouponService implements ICouponService {
     public ResponseEntity<List<CouponResponseDTO>> getCouponsByCategory(String category) {
         List<CouponResponseDTO> list = couponRepository.findByCategory(category)
                 .stream()
-                .map(this::convertToDTO)
+                .map(this::convertToPaidDTO)
                 .collect(Collectors.toList());
 
         if (list.isEmpty()) {
@@ -114,7 +155,17 @@ public class CouponService implements ICouponService {
         return ResponseEntity.ok(list);
     }
 
-    private CouponResponseDTO convertToDTO(Coupons coupon) {
+    private Brand getOrSavedBrand(String brandName, String brandLogo){
+        return brandRepository.findByBrandNameIgnoreCase(brandName)
+                .orElseGet(() -> {
+                    Brand newBrand = new Brand();
+                    newBrand.setBrandName(brandName);
+                    newBrand.setBrandLogo(brandLogo);
+                    return brandRepository.save(newBrand);
+                });
+    }
+
+    private CouponResponseDTO convertToPaidDTO(Coupons coupon) {
         return new CouponResponseDTO(
                 coupon.getCoupon_id(),
                 coupon.getBrand().getBrandName(),
@@ -124,6 +175,16 @@ public class CouponService implements ICouponService {
                 coupon.getCouponType(),
                 coupon.getQuantity(),
                 coupon.getPrice(),
+                coupon.getExpiryTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+        );
+    }
+
+    private CouponResponseDTO convertToPromoDTO(Coupons coupon){
+        return new CouponResponseDTO(
+                coupon.getCoupon_id(),
+                coupon.getCategory(),
+                coupon.getOfferDetails(),
+                coupon.getCouponType(),
                 coupon.getExpiryTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
         );
     }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Razorpay Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<h2>Click below to pay</h2>
+<button id="rzp-button">Pay Now</button>
+
+<script>
+    var options = {
+        "key": "rzp_test_ml3aJh6R7DYqMt", // Replace with your test key
+        "amount": "10000", // Amount in paise (50000 = ₹500)
+        "currency": "INR",
+        "name": "Deals and Coupons",
+        "description": "Test Payment",
+        "order_id": "order_QSkMk6OPcQV5R1", // Replace with actual Razorpay order_id from your backend
+        "handler": function (response){
+            alert("✅ Payment Success!");
+            alert("Payment ID: " + response.razorpay_payment_id);
+            alert("Order ID: " + response.razorpay_order_id);
+            alert("Signature: " + response.razorpay_signature);
+            // You can now POST these to your /verify API
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+
+</body>
+</html>

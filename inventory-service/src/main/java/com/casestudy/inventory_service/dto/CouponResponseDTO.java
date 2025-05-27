@@ -15,4 +15,12 @@ public class CouponResponseDTO {
     private int quantity;
     private int price;
     private String expiryTime;
+
+    public CouponResponseDTO(Long couponId, String category, String offerDetails, String couponType, String format) {
+        this.couponId = couponId;
+        this.category = category;
+        this.offerDetails = offerDetails;
+        this.couponType = couponType;
+        this.expiryTime = format;
+    }
 }

@@ -53,8 +53,7 @@ public class JWTAuthFilter implements GlobalFilter, Ordered {
             // AUTH
             entry("/auth/register", List.of()),
             entry("/auth/login", List.of()),
-            entry("/auth/profile", List.of("ROLE_USER", "ROLE_ADMIN")),
-            entry("/auth/", List.of("ROLE_USER", "ROLE_ADMIN"))
+            entry("/auth/profile", List.of("ROLE_USER", "ROLE_ADMIN"))
     );
 
 

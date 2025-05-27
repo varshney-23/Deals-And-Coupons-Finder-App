@@ -13,6 +13,5 @@ public interface IBookingService {
     ResponseEntity<String> completePayment(Long bookingId);
     ResponseEntity<List<BookingResponseDTO>> getUserBookings(Long userId);
     ResponseEntity<List<BookingResponseDTO>> getAllBookings();
-    ResponseEntity<Long> getUserIdByBookingId(Long bookingId);
 }
 
