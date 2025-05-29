@@ -27,7 +27,7 @@ public class JWTAuthFilter implements GlobalFilter, Ordered {
     private JwtUtil jwtUtil;
 
     private final List<String> openApiEndpoints = List.of(
-            "/auth/register", "/auth/login", "/swagger-ui", "/v3/api-docs"
+            "/auth/register", "/auth/login"
     );
 
     private final Map<String, List<String>> routeRoleMap = Map.ofEntries(
@@ -47,12 +47,8 @@ public class JWTAuthFilter implements GlobalFilter, Ordered {
             entry("/inventory/booking/payment", List.of("ROLE_USER")),
             entry("/inventory/booking/user/", List.of("ROLE_USER")),
             entry("/inventory/booking/all", List.of("ROLE_ADMIN")),
-            entry("/inventory/booking/userid", List.of("ROLE_USER", "ROLE_ADMIN")),
-            entry("/inventory/booking/getAmount", List.of("ROLE_ADMIN")), // or USER if needed
 
             // AUTH
-            entry("/auth/register", List.of()),
-            entry("/auth/login", List.of()),
             entry("/auth/profile", List.of("ROLE_USER", "ROLE_ADMIN"))
     );
 

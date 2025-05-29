@@ -29,6 +29,7 @@ public class CouponService implements ICouponService {
     @Autowired
     private BrandRepository brandRepository;
 
+
     public ResponseEntity<CouponResponseDTO> addPromoCoupon(PromoCouponDTO dto) {
         Brand brand = getOrSavedBrand(dto.getBrandName(), dto.getBrandLogo());
 

@@ -4,9 +4,7 @@ import com.casestudy.inventory_service.dto.CouponResponseDTO;
 import com.casestudy.inventory_service.dto.CouponUpdateDTO;
 import com.casestudy.inventory_service.dto.PaidCouponDTO;
 import com.casestudy.inventory_service.dto.PromoCouponDTO;
-import com.casestudy.inventory_service.model.Brand;
 import com.casestudy.inventory_service.model.Coupons;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

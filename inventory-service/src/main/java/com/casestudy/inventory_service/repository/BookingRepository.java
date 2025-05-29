@@ -1,5 +1,6 @@
 package com.casestudy.inventory_service.repository;
 
+import com.casestudy.inventory_service.dto.BookingResponseDTO;
 import com.casestudy.inventory_service.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

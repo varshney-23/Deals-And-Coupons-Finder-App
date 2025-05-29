@@ -26,12 +26,12 @@ public class UserController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody @Valid RequestDTO user) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody RequestDTO user) {
         return authService.registerUser(user);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody @Valid LoginRequestDTO requestDTO) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequestDTO requestDTO) {
         ResponseEntity<String> tokenResponse = authService.authenticateUser(requestDTO);
 
         if (!tokenResponse.getStatusCode().is2xxSuccessful()) {
