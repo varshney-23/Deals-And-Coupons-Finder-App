@@ -1,9 +1,11 @@
 package com.casestudy.inventory_service.controller;
 
 import com.casestudy.inventory_service.Interface.IBookingService;
+import com.casestudy.inventory_service.Interface.IBrandService;
 import com.casestudy.inventory_service.Interface.ICouponService;
 import com.casestudy.inventory_service.dto.*;
 import com.casestudy.inventory_service.model.Booking;
+import com.casestudy.inventory_service.model.Brand;
 import com.casestudy.inventory_service.model.Coupons;
 import com.casestudy.inventory_service.repository.BookingRepository;
 import feign.Response;
@@ -28,6 +30,15 @@ public class InventoryController {
 
     @Autowired
     private IBookingService bookingService;
+
+    @Autowired
+    private IBrandService brandService;
+
+    @GetMapping("/brands")
+    public ResponseEntity<List<BrandResponseDTO>> getAllBrands() {
+//        List<Brand> brands = brandService.getAllBrands();
+        return brandService.getAllBrands();
+    }
 
     // -------------------- COUPON APIs --------------------
 

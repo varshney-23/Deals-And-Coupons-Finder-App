@@ -3,10 +3,14 @@ package com.casestudy.inventory_service.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Data
+@Getter
+@Setter
 @Entity
 @Table(name = "bookings")
 public class Booking {
