@@ -31,6 +31,9 @@ public class JWTAuthFilter implements GlobalFilter, Ordered {
     );
 
     private final Map<String, List<String>> routeRoleMap = Map.ofEntries(
+
+            entry("/inventory/brands", List.of("ROLE_USER")),
+
             // COUPONS
             entry("/inventory/coupon/add", List.of("ROLE_ADMIN")),
             entry("/inventory/coupon/update", List.of("ROLE_ADMIN")),
