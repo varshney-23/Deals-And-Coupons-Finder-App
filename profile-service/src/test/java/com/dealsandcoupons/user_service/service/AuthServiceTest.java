@@ -96,7 +96,7 @@ class AuthServiceTest {
         login.setPassword("qwerty123");
 
         when(userRepository.findByEmail("test1@gmail.com")).thenReturn(Optional.of(mockUser));
-        when(jwtUtil.generateToken(mockUser.getUsername(), mockUser.getRole().name())).thenReturn("mock-jwt-token");
+        when(jwtUtil.generateToken(mockUser.getId(), mockUser.getUsername(), mockUser.getRole().name())).thenReturn("mock-jwt-token");
 
         ResponseEntity<String> res = authService.authenticateUser(login);
 

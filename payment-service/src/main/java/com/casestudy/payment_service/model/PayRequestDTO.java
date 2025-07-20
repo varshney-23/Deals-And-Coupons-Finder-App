@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PayRequestDTO {
     private int amount;
-    private int quantity;
     private String email;
     private String receipt;
 }

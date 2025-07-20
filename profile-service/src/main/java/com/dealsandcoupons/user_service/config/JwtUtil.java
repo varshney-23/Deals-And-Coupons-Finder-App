@@ -17,10 +17,11 @@ public class JwtUtil {
 
     private static final long EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
 
-    public String generateToken(String username, String role) {
+    public String generateToken(Long userId, String username, String role) {
         return JWT.create()
                 .withSubject(username)
-                .withClaim("role", "ROLE_"+role)
+                .withClaim("id", userId)                  // ✅ add user ID
+                .withClaim("role", "ROLE_" + role)
                 .withIssuer("MyApp")
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

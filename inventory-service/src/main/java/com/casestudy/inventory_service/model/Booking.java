@@ -25,6 +25,10 @@ public class Booking {
     private int price;
 
     @ManyToOne
+    @JoinColumn(name = "group_id")
+    private BookingGroup bookingGroup;
+
+    @ManyToOne
     @JoinColumn(name = "coupon_id")
     @NotNull(message = "Coupon reference is required")
     private Coupons coupon;
@@ -33,7 +37,7 @@ public class Booking {
     //quantity of coupons that has been purchased.
     private int quantity; // for paid coupons
 
-    @Max(value = 12, message = "Coupon code should have at most 12 characters")
+    @Size(max = 12, message = "Coupon code should have at most 12 characters")
     private String couponCode; // for promo
 
     private String email;

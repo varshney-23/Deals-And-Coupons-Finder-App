@@ -51,7 +51,7 @@ public class AuthService {
             return ResponseEntity.badRequest().body("Invalid email or password!");
         }
 
-        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole().name());
         return ResponseEntity.ok(token);
     }
 

@@ -23,7 +23,7 @@ public class PayService {
     public String processPayment(PayRequestDTO req) {
 
         try {
-            double amountInPaise = req.getAmount() * req.getQuantity() * 100;
+            double amountInPaise = req.getAmount() * 100;
             JSONObject opt = new JSONObject();
             opt.put("amount", amountInPaise);
             opt.put("currency", "INR");

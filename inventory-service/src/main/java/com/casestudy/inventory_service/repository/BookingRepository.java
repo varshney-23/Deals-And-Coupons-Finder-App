@@ -17,4 +17,8 @@ public interface BookingRepository  extends JpaRepository<Booking, Long> {
 
     @Query("SELECT s FROM Booking s WHERE s.userId = :user_id AND s.coupon.coupon_id = :coup_id")
     Optional<Booking> findByUserIdAndCouponId(@Param("user_id") long userId,@Param("coup_id") Long couponId);
+
+    List<Booking> findByUserIdAndIsPaid(Long userId, boolean isPaid);
+
+
 }

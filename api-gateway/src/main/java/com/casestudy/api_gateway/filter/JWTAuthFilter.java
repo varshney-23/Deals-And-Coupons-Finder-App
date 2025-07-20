@@ -165,10 +165,12 @@ public class JWTAuthFilter implements GlobalFilter, Ordered {
 
             // BOOKINGS
             entry("/inventory/booking/promotional", List.of("ROLE_USER")),
-            entry("/inventory/booking/paid", List.of("ROLE_USER")),
-            entry("/inventory/booking/payment", List.of("ROLE_USER")),
+            entry("/inventory/booking/multiple/paid", List.of("ROLE_USER")),
+            entry("/inventory/booking/payment/group/", List.of("ROLE_USER")),
             entry("/inventory/booking/user/", List.of("ROLE_USER")),
             entry("/inventory/booking/all", List.of("ROLE_ADMIN")),
+            entry("/inventory/user/bookings/promo", List.of("ROLE_USER")),
+            entry("/inventory/user/bookings/paid", List.of("ROLE_USER")),
 
             // AUTH
             entry("/auth/profile", List.of("ROLE_USER", "ROLE_ADMIN"))

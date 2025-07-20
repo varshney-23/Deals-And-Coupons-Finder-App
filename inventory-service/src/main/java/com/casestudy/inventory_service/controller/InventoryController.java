@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/inventory")
@@ -96,15 +97,28 @@ public class InventoryController {
         return bookingService.bookPromotional(couponId, token);
     }
 
-    @PostMapping("/booking/paid")
-    public ResponseEntity<BookingResponseDTO> bookPaid(@Valid @RequestBody BookingRequestDTO requestDTO , @RequestHeader("Authorization") String token) {
-        return bookingService.bookPaidCoupon(requestDTO, token);
+//    @PostMapping("/booking/paid")
+//    public ResponseEntity<BookingResponseDTO> bookPaid(@Valid @RequestBody BookingRequestDTO requestDTO , @RequestHeader("Authorization") String token) {
+//        return bookingService.bookPaidCoupon(requestDTO, token);
+//    }
+//
+//    @GetMapping("/booking/payment/{bookingId}")
+//    public ResponseEntity<String> completePayment(@PathVariable Long bookingId) {
+////        System.out.println("hit ho bhi raha hai?");
+//        return bookingService.completePayment(bookingId);
+//    }
+
+
+    @PostMapping("/booking/multiple/paid")
+    public ResponseEntity<Map<String,Object>> bookMultipleCoupons(
+            @RequestBody MultiCouponBookingRequestDTO request,
+            @RequestHeader("Authorization") String token) {
+        return bookingService.bookMultiplePaidCoupons(request, token);
     }
 
-    @GetMapping("/booking/payment/{bookingId}")
-    public ResponseEntity<String> completePayment(@PathVariable Long bookingId) {
-//        System.out.println("hit ho bhi raha hai?");
-        return bookingService.completePayment(bookingId);
+    @PostMapping("/booking/payment/group/{groupId}")
+    public ResponseEntity<String> completeGroupPayment(@PathVariable Long groupId) {
+        return bookingService.completeGroupPayment(groupId);
     }
 
     @GetMapping("/booking/user/{userId}")
@@ -115,6 +129,16 @@ public class InventoryController {
     @GetMapping("/booking/all")
     public ResponseEntity<List<BookingResponseDTO>> getAllBookings() {
         return bookingService.getAllBookings();
+    }
+
+    @GetMapping("/user/bookings/paid")
+    public ResponseEntity<List<ReceiptCouponDTO>> getPaidBookings(@RequestHeader("Authorization") String token) {
+        return bookingService.getPaidBookings(token);
+    }
+
+    @GetMapping("/user/bookings/promo")
+    public ResponseEntity<List<ReceiptCouponDTO>> getPromoBookings(@RequestHeader("Authorization") String token) {
+        return bookingService.getPromoBookings(token);
     }
 
 }
