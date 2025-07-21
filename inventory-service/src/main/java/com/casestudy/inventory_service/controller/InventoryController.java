@@ -97,18 +97,6 @@ public class InventoryController {
         return bookingService.bookPromotional(couponId, token);
     }
 
-//    @PostMapping("/booking/paid")
-//    public ResponseEntity<BookingResponseDTO> bookPaid(@Valid @RequestBody BookingRequestDTO requestDTO , @RequestHeader("Authorization") String token) {
-//        return bookingService.bookPaidCoupon(requestDTO, token);
-//    }
-//
-//    @GetMapping("/booking/payment/{bookingId}")
-//    public ResponseEntity<String> completePayment(@PathVariable Long bookingId) {
-////        System.out.println("hit ho bhi raha hai?");
-//        return bookingService.completePayment(bookingId);
-//    }
-
-
     @PostMapping("/booking/multiple/paid")
     public ResponseEntity<Map<String,Object>> bookMultipleCoupons(
             @RequestBody MultiCouponBookingRequestDTO request,

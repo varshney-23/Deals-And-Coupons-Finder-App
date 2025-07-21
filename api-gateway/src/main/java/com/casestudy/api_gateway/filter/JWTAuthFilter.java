@@ -151,26 +151,28 @@ public class JWTAuthFilter implements GlobalFilter, Ordered {
 
     private final Map<String, List<String>> routeRoleMap = Map.ofEntries(
 
-            entry("/inventory/brands", List.of("ROLE_USER")),
-
-            // COUPONS
-            entry("/inventory/coupon/add", List.of("ROLE_ADMIN")),
+            //admin_routes =>
+            entry("/inventory/coupon/add/promotional", List.of("ROLE_ADMIN")),
+            entry("/inventory/coupon/add/paid", List.of("ROLE_ADMIN")),
             entry("/inventory/coupon/update", List.of("ROLE_ADMIN")),
             entry("/inventory/coupon/delete", List.of("ROLE_ADMIN")),
             entry("/inventory/coupon/delete-expired", List.of("ROLE_ADMIN")),
-            entry("/inventory/coupon/get/", List.of("ROLE_ADMIN", "ROLE_USER")),
-            entry("/inventory/coupon/all", List.of("ROLE_ADMIN", "ROLE_USER")),
-            entry("/inventory/coupon/get/brand", List.of("ROLE_ADMIN", "ROLE_USER")),
-            entry("/inventory/coupon/get/category", List.of("ROLE_ADMIN", "ROLE_USER")),
+            entry("/inventory/booking/all", List.of("ROLE_ADMIN")),
+            entry("/inventory/coupon/all", List.of("ROLE_ADMIN")),
 
-            // BOOKINGS
+            //user_routes =>
             entry("/inventory/booking/promotional", List.of("ROLE_USER")),
             entry("/inventory/booking/multiple/paid", List.of("ROLE_USER")),
             entry("/inventory/booking/payment/group/", List.of("ROLE_USER")),
             entry("/inventory/booking/user/", List.of("ROLE_USER")),
-            entry("/inventory/booking/all", List.of("ROLE_ADMIN")),
             entry("/inventory/user/bookings/promo", List.of("ROLE_USER")),
             entry("/inventory/user/bookings/paid", List.of("ROLE_USER")),
+
+            //public_routes =>
+            entry("/inventory/brands", List.of("ROLE_ADMIN", "ROLE_USER")),
+            entry("/inventory/coupon/get/", List.of("ROLE_ADMIN", "ROLE_USER")),
+            entry("/inventory/coupon/get/brand", List.of("ROLE_ADMIN", "ROLE_USER")),
+            entry("/inventory/coupon/get/category", List.of("ROLE_ADMIN", "ROLE_USER")),
 
             // AUTH
             entry("/auth/profile", List.of("ROLE_USER", "ROLE_ADMIN"))
